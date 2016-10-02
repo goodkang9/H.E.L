@@ -1,0 +1,84 @@
+#include <iostream>
+#include<string>
+#include<vector>
+using namespace std;
+unsigned res = 0, &rres = res;
+unsigned vmax(vector<unsigned> x)
+{
+	unsigned max=0;
+	for (unsigned i = 0; i != x.size(); i++)
+	{
+		if (x[i] > x[max]) max = i;
+	}
+	return max;
+}
+unsigned ite(vector<unsigned> x)
+{
+	vector<unsigned> v1, v2;
+	if (x.size() > 1)
+	{
+		for (int i = 0; i < vmax(x); i++)
+			v1.push_back(x[i]);
+		for (int i = vmax(x) + 1; i < x.size(); i++)
+			v2.push_back(x[i]);
+		if (v1.size()>1)
+		{
+			if (v2.size()>1)
+			{
+				rres = ite(v1)*x[vmax(x)] + ite(v2);
+			}
+			else if (v2.size() == 1)
+			{
+				rres = ite(v1)*x[vmax(x)] + x[vmax(x) + 1];
+			}
+			else
+			{
+				rres = ite(v1)*x[vmax(x)];
+			}
+		}
+		else 
+		{
+			if (v2.size() > 1)
+			{
+				rres = x[vmax(x) - 1] * x[vmax(x)] + ite(v2);
+			}
+			else if (v2.size() == 1)
+			{
+				rres = x[vmax(x) - 1] * x[vmax(x)] + x[vmax(x) + 1];
+			}
+			else
+			{
+				rres = x[vmax(x) - 1] * x[vmax(x)];
+			}
+		}
+	}
+	else
+		rres = x[0];
+	return rres;
+}
+void main()
+{
+	cout << "汉字数字-->阿拉伯数字" << endl;
+	cout << "请输入汉字数字:" << endl;
+	vector<string> ch = { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "百", "千", "万", "亿" };
+	vector<unsigned> digit = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 1000, 10000, 100000000 };
+	string ins;
+	vector<string> inv;
+	vector<unsigned> sum;
+	unsigned all;
+	while (cin >> ins)
+	{
+		inv.push_back(ins);
+		if (ins == "s") break;
+	}
+	for (auto it = inv.begin(); it != inv.end(); it++)
+	{
+		for (int i = 0; i < ch.size(); i++)
+		{
+			if (*it == ch[i]) sum.push_back(digit[i]);
+		}
+	}
+	all=ite(sum);
+	cout << "阿拉伯数字="<<all << endl;
+}
+
